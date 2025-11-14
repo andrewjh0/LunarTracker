@@ -79,3 +79,33 @@ class Moon:
     def parse_date(self, d):
         year, month, day = map(int, d.split("-"))
         return date(year, month, day)
+    
+    def get_phase_emoji(self, day):
+        """Returns a moon phase emoji for the given date"""
+        delta = self.parse_date(day) - self.standard_date
+        days = delta.days
+        
+        while days < 0:
+            days = self.PERIOD + days
+        
+        days = days % self.PERIOD
+        
+        # Determine phase based on day in cycle
+        if days < 1:
+            return "🌑"  # New Moon
+        elif days < 7:
+            return "🌒"  # Waxing Crescent
+        elif days < 8:
+            return "🌓"  # First Quarter
+        elif days < 14:
+            return "🌔"  # Waxing Gibbous
+        elif days < 15:
+            return "🌕"  # Full Moon
+        elif days < 21:
+            return "🌖"  # Waning Gibbous
+        elif days < 22:
+            return "🌗"  # Last Quarter
+        elif days < 29:
+            return "🌘"  # Waning Crescent
+        else:
+            return "🌑"  # New Moon
