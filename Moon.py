@@ -8,8 +8,8 @@ class Moon:
 
     # Moon's properties
     waxing = True
-    standard_date = date(2025, 10, 21) # (accurate, but arbitrary) Date of a new moon phase occurrence
-    PERIOD = 29.5 # Period of the lunar cycle
+    standard_date = date(2025, 11, 20) # (accurate, but arbitrary) Date of a new moon phase occurrence
+    PERIOD = 29.53 # Period of the lunar cycle
 
     def __init__(self, canvas, radius, position):
         self.canvas = canvas
@@ -19,6 +19,14 @@ class Moon:
 
     def set_phase(self, day):
         inner_radius = self.get_inner_radius(day) # distance of radius from center
+
+        # Snap to bounds if close (within 5% of radius) to ensure clean Full/New moon phases
+        # Prevent slivers from showing when supposed to be new/full moon
+        threshold = self.radius * 0.05
+        if inner_radius > self.radius - threshold:
+            inner_radius = self.radius
+        elif inner_radius < -self.radius + threshold:
+            inner_radius = -self.radius
 
         points = self.get_arc_points(self.position[0] + self.radius) # Outer arc
         points.reverse() # Reverses so the next addition is continuous
